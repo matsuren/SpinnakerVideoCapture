@@ -54,6 +54,8 @@ public:
     return getCamera(idx);
   }
 
+  int size() { return pCams.size(); }
+
 private:
   void release() {
     for (int i = 0; i < pCams.size(); i++) {
@@ -170,7 +172,7 @@ public:
   }
 
   void release() {
-    pCam->EndAcquisition();
+    if (isCapturing) pCam->EndAcquisition();
     pCam->DeInit();
     pCam = nullptr;
   }
@@ -249,24 +251,89 @@ private:
   ImagePtr pConverted;  // save in memory
 };
 
+class SpinMultiCam {
+public:
+  void addCamera(CameraPtr& cam) {
+    // Only software trigger is possible
+    SpinCamPtr cam_ptr = std::make_shared<SpinCam>(cam);
+    cam_ptr->setSoftwareTrigger();
+    spincams.push_back(cam_ptr);
+  }
+
+  bool read(std::vector<cv::Mat>& imgs) {
+    grab();
+    bool ret = retrieve(imgs);
+    return ret;
+  }
+
+  void grab() {
+    for (auto& it : spincams) {
+      it->grab();
+    }
+  }
+
+  bool retrieve(std::vector<cv::Mat>& imgs) {
+    imgs.clear();
+    bool ret = true;
+    for (auto& it : spincams) {
+      cv::Mat tmpimg;
+      ret &= it->retrieve(tmpimg);
+      imgs.push_back(tmpimg);
+    }
+    return ret;
+  }
+
+  void release() {
+    for (auto& it : spincams) {
+      it->release();
+    }
+  }
+
+private:
+  std::vector<SpinCamPtr> spincams;
+};
+
 int main(int /*argc*/, char** /*argv*/) {
   SpinManager manager = SpinManager();
+
+//#define STEREO
+#ifdef STEREO
+  SpinMultiCam cap;
+  for (int i = 0; i < manager.size(); i++) {
+    cap.addCamera(manager.getCamera(i));
+  }
+#else
   SpinCam cap(manager.getCamera(0));
-   cap.setFrameRate(30);
-   //cap.setFrameRateAuto(true);
+  cap.setFrameRate(30);
+  // cap.setFrameRateAuto(true);
+#endif
 
   std::cout << "Capture start" << std::endl;
   int fps_cnt = 0;
   double diff_total = 0;
   while (true) {
     auto start = std::chrono::high_resolution_clock::now();
+    std::vector<cv::Mat> imgs;
     cv::Mat img, dst;
 
+#ifdef STEREO
+    if (cap.read(imgs)) {
+#else
     if (cap.read(img)) {
-      cv::resize(img, dst, cv::Size(640, 640));
-      cv::imshow("test", dst);
+      imgs.push_back(img);
+#endif
+      for (int i = 0; i < imgs.size(); i++) {
+        cv::resize(imgs[i], dst, cv::Size(640, 640));
+        std::ostringstream winname;
+        winname << "img" << i;
+        cv::imshow(winname.str(), dst);
+      }
+
       int key = cv::waitKey(10);
       if (key == 27) break;
+      if (key == 's') {
+        cv::waitKey(0);
+      }
 
       auto end = std::chrono::high_resolution_clock::now();
       auto diff =
