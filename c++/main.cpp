@@ -35,7 +35,7 @@ public:
       auto pCam = camList.GetByIndex(i);
       pCams.push_back(pCam);
       pCam->Init();
-      std::string serial = pCam->DeviceSerialNumber.ToString();
+      std::string serial = std::string(pCam->DeviceSerialNumber.ToString());
       serial2idx[serial] = i;
       pCam->DeInit();
     }

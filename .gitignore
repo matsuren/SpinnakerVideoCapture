@@ -1,2 +1,4 @@
 .ipynb_checkpoints
 build
+.idea
+cmake-build-*

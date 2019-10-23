@@ -4,7 +4,7 @@ cmake_minimum_required (VERSION 3.1)
 set(ProjectId "SpinCapture")
 message(Project Id : ${ProjectId})
 project (${ProjectId})
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 11)
 
 #Setting the variables
 set( PROJ_NAME      "capture_test" )
@@ -26,7 +26,10 @@ set(Spinnaker_INCLUDE_DIR "C:/Program Files/Point Grey Research/Spinnaker/includ
 link_directories("C:/Program Files/Point Grey Research/Spinnaker/lib64/vs2015")
 endif(WIN32) 
 if(UNIX)
-set(Spinnaker_LIBS "")
+add_definitions(-DLINUX)
+set(Spinnaker_LIBS "libSpinnaker.so")
+set(Spinnaker_INCLUDE_DIR "/usr/include/spinnaker")
+link_directories("/usr/lib")
 endif(UNIX)
 
 ######################################################################
