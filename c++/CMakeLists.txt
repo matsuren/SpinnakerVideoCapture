@@ -35,6 +35,6 @@ endif(UNIX)
 
 # ##############################################################################
 # Project
-add_executable(${PROJ_NAME} main.cpp)
+add_executable(${PROJ_NAME} main.cpp spincamera.cpp)
 target_link_libraries(${PROJ_NAME} ${OpenCV_LIBS} ${Spinnaker_LIBS})
-target_include_directories(${PROJ_NAME} PUBLIC ${Spinnaker_INCLUDE_DIR})
+target_include_directories(${PROJ_NAME} PUBLIC ${PROJECT_SOURCE_DIR} ${Spinnaker_INCLUDE_DIR})
