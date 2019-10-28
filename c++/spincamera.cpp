@@ -38,7 +38,9 @@ SpinCam::SpinCam(CameraPtr pCam_) {
               << std::endl;
 
     // White balance
-    setWhiteBalanceRatio(1.06);
+    setWhiteBalanceRatio(1.18, "Red");
+    setWhiteBalanceRatio(1.46, "Blue");
+
   } catch (Spinnaker::Exception& e) {
     std::cout << "Error: " << e.what() << std::endl;
   }
@@ -186,8 +188,11 @@ void SpinCam::setFrameRateAuto(bool flag) {
   ptrFrameRateAuto->SetIntValue(value);
 }
 
-void SpinCam::setWhiteBalanceRatio(double val) {
-  pCam->BalanceRatioSelector.SetValue(BalanceRatioSelector_Red);
+void SpinCam::setWhiteBalanceRatio(double val, std::string select) {
+  if(select=="Red")
+    pCam->BalanceRatioSelector.SetValue(BalanceRatioSelector_Red);
+  else if(select=="Blue")
+    pCam->BalanceRatioSelector.SetValue(BalanceRatioSelector_Blue);
   pCam->BalanceRatio.SetValue(val);
 }
 

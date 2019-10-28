@@ -32,7 +32,7 @@ public:
   void setFrameRateAuto(bool flag);
 
 private:
-  void setWhiteBalanceRatio(double val);
+  void setWhiteBalanceRatio(double val, std::string select="Red");
 
   CameraPtr pCam;
   bool isGrab = false;
