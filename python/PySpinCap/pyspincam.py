@@ -23,7 +23,8 @@ class PySpinCam(object):
         self.cam.AcquisitionMode.SetValue(PySpin.AcquisitionMode_Continuous)
 
         # white balance setting
-        self.set_white_balance_ratio(1.06)
+        self.set_white_balance_ratio(1.18, select='Red')
+        self.set_white_balance_ratio(1.46, select='Blue')
 
         #  start capturing
         self.cam.BeginAcquisition()
@@ -78,8 +79,11 @@ class PySpinCam(object):
         self.cam.TriggerMode.SetValue(PySpin.TriggerMode_On)
         self.isSoftwareTrigger = True
 
-    def set_white_balance_ratio(self, val):
-        self.cam.BalanceRatioSelector.SetValue(PySpin.BalanceRatioSelector_Red)
+    def set_white_balance_ratio(self, val, select='Red'):
+        if select == 'Red':
+            self.cam.BalanceRatioSelector.SetValue(PySpin.BalanceRatioSelector_Red)
+        elif select == 'Blue':
+            self.cam.BalanceRatioSelector.SetValue(PySpin.BalanceRatioSelector_Blue)
         self.cam.BalanceRatio.SetValue(val)
 
     def set_frame_rate(self, fps):
