@@ -2,17 +2,12 @@
 #include "spincamera.hpp"
 
 #include <iostream>
-#include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
-#include <sstream>
 #include <string>
 
-#include "SpinGenApi/SpinnakerGenApi.h"
 #include "Spinnaker.h"
 
 using namespace Spinnaker;
-using namespace Spinnaker::GenApi;
-using namespace Spinnaker::GenICam;
 
 class SpinCam;
 using SpinCamPtr = std::shared_ptr<SpinCam>;
@@ -153,7 +148,7 @@ void SpinCam::setFrameRateAuto(bool flag) {
   int64_t value;
 
   // Turning AcquisitionFrameRateAuto on or off
-  CEnumerationPtr ptrFrameRateAuto =
+  GenApi::CEnumerationPtr ptrFrameRateAuto =
       pCam->GetNodeMap().GetNode("AcquisitionFrameRateAuto");
   if (!IsAvailable(ptrFrameRateAuto) || !IsWritable(ptrFrameRateAuto)) {
     std::cout << "Unable to set AcquisitionFrameRateAuto..." << std::endl
@@ -161,7 +156,7 @@ void SpinCam::setFrameRateAuto(bool flag) {
     return;
   }
   if (flag) {
-    CEnumEntryPtr ptrFrameRateAutoMode =
+    GenApi::CEnumEntryPtr ptrFrameRateAutoMode =
         ptrFrameRateAuto->GetEntryByName("Continuous");
     if (!IsAvailable(ptrFrameRateAutoMode) ||
         !IsReadable(ptrFrameRateAutoMode)) {
@@ -173,7 +168,7 @@ void SpinCam::setFrameRateAuto(bool flag) {
     }
     value = ptrFrameRateAutoMode->GetValue();
   } else {
-    CEnumEntryPtr ptrFrameRateAutoMode =
+    GenApi::CEnumEntryPtr ptrFrameRateAutoMode =
         ptrFrameRateAuto->GetEntryByName("Off");
     if (!IsAvailable(ptrFrameRateAutoMode) ||
         !IsReadable(ptrFrameRateAutoMode)) {
@@ -189,9 +184,9 @@ void SpinCam::setFrameRateAuto(bool flag) {
 }
 
 void SpinCam::setWhiteBalanceRatio(double val, std::string select) {
-  if(select=="Red")
+  if (select == "Red")
     pCam->BalanceRatioSelector.SetValue(BalanceRatioSelector_Red);
-  else if(select=="Blue")
+  else if (select == "Blue")
     pCam->BalanceRatioSelector.SetValue(BalanceRatioSelector_Blue);
   pCam->BalanceRatio.SetValue(val);
 }

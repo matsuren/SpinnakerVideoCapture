@@ -5,8 +5,8 @@
 #include <sstream>
 #include <string>
 
-#include "spincamera.hpp"
-#include "spinmanager.hpp"
+#include "SpinCap/spincamera.hpp"
+#include "SpinCap/spinmanager.hpp"
 
 class SpinCam;
 using SpinCamPtr = std::shared_ptr<SpinCam>;

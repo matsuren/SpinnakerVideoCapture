@@ -1,12 +1,9 @@
 #pragma once
 #include <opencv2/core.hpp>
 
-#include "SpinGenApi/SpinnakerGenApi.h"
 #include "Spinnaker.h"
 
 using namespace Spinnaker;
-using namespace Spinnaker::GenApi;
-using namespace Spinnaker::GenICam;
 
 class SpinCam;
 using SpinCamPtr = std::shared_ptr<SpinCam>;
@@ -32,7 +29,7 @@ public:
   void setFrameRateAuto(bool flag);
 
 private:
-  void setWhiteBalanceRatio(double val, std::string select="Red");
+  void setWhiteBalanceRatio(double val, std::string select = "Red");
 
   CameraPtr pCam;
   bool isGrab = false;

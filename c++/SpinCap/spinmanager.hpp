@@ -2,12 +2,9 @@
 #include <iostream>
 #include <string>
 
-#include "SpinGenApi/SpinnakerGenApi.h"
 #include "Spinnaker.h"
 
 using namespace Spinnaker;
-using namespace Spinnaker::GenApi;
-using namespace Spinnaker::GenICam;
 
 class SpinManager {
 public:

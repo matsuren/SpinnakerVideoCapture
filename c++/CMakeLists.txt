@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.1)
 set(ProjectId "SpinCapture")
 message(Project Id : ${ProjectId})
 project(${ProjectId})
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 
 # Setting the variables
 set(PROJ_NAME "capture_test")
@@ -35,6 +35,6 @@ endif(UNIX)
 
 # ##############################################################################
 # Project
-add_executable(${PROJ_NAME} main.cpp spincamera.cpp)
+add_executable(${PROJ_NAME} main.cpp SpinCap/spincamera.cpp)
 target_link_libraries(${PROJ_NAME} ${OpenCV_LIBS} ${Spinnaker_LIBS})
 target_include_directories(${PROJ_NAME} PUBLIC ${PROJECT_SOURCE_DIR} ${Spinnaker_INCLUDE_DIR})
