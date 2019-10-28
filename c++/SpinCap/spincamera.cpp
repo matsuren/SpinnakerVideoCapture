@@ -26,15 +26,21 @@ SpinCam::SpinCam(CameraPtr pCam_) {
     pCam->TLStream.StreamBufferHandlingMode.SetValue(
         StreamBufferHandlingMode_NewestOnly);
 
+    // camera info
+    serial = pCam->DeviceSerialNumber.ToString();
+    model = pCam->DeviceModelName.ToString();
     std::cout << "Pixel format:" << pCam->PixelFormat.ToString() << std::endl;
-    std::cout << "Device model:" << pCam->DeviceModelName.ToString()
-              << std::endl;
-    std::cout << "Serial number:" << pCam->DeviceSerialNumber.ToString()
-              << std::endl;
+    std::cout << "Device model:" << model << std::endl;
+    std::cout << "Serial number:" << serial << std::endl;
+    if (model == "Grasshopper3 GS3-U3-41C6C"){
+      std::cout << "Set ROI since Model is " << model << std::endl;
+      setROI(224, 224, 1600, 1600);
+    }
 
     // White balance
     setWhiteBalanceRatio(1.18, "Red");
     setWhiteBalanceRatio(1.46, "Blue");
+
 
   } catch (Spinnaker::Exception& e) {
     std::cout << "Error: " << e.what() << std::endl;
@@ -100,6 +106,8 @@ void SpinCam::setFrameRate(double fps) {
 }
 
 void SpinCam::setROI(int offset_x, int offset_y, int width, int height) {
+  std::cout << "Set ROI:" << offset_x << ", " << offset_y <<  ", " ;
+  std::cout << width << ", " << height <<  std::endl;
   if (pCam->OffsetX.GetValue() < offset_x) {
     int _width = width / 32;
     pCam->Width.SetValue(_width * 32);

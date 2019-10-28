@@ -18,6 +18,10 @@ class PySpinCam(object):
         print('Device model:', device_model)
         # Get serial number
         print('Serial number:', self.cam.DeviceSerialNumber.ToString())
+        if device_model == "Grasshopper3 GS3-U3-41C6C":
+            print("Set ROI since Model is ", device_model)
+            self.set_roi(224, 224, 1600, 1600)
+            # self.set_roi(0, 0, 2048, 2048)
 
         # image acquisition
         self.cam.AcquisitionMode.SetValue(PySpin.AcquisitionMode_Continuous)
@@ -98,6 +102,19 @@ class PySpinCam(object):
             self.isSoftwareTrigger = False
         else:
             print('Error setting fps:')
+
+    def set_roi(self, offset_x, offset_y, width, height):
+        print('Set ROI:{}, {}, {}, {}'.format(offset_x, offset_y, width, height))
+        if self.cam.OffsetX.GetValue() < offset_x:
+            self.cam.Width.SetValue(int(width / 32) * 32)
+            self.cam.Height.SetValue(int(height / 2) * 2)
+            self.cam.OffsetX.SetValue(offset_x)
+            self.cam.OffsetY.SetValue(offset_y)
+        else:
+            self.cam.OffsetX.SetValue(offset_x)
+            self.cam.OffsetY.SetValue(offset_y)
+            self.cam.Width.SetValue(int(width / 32) * 32)
+            self.cam.Height.SetValue(int(height / 2) * 2)
 
 
 # Multiple camera class (software sync)
