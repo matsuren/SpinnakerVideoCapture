@@ -15,10 +15,14 @@ def main():
     print('camera id:{}'.format(args.num))
     STEREO = True if len(args.num) > 1 else False
     if STEREO:
-        print('Stereo mode: software synchronization is enabled!')
+        print('##\n##Stereo mode: software synchronization is enabled!\n##')
 
     # start manager
     manager = PySpinManager()
+    if len(manager.cams) == 0:
+        print('No camera detected')
+        return
+
     if STEREO:
         cap = manager.get_multi_camera(args.num)
     else:
@@ -36,6 +40,10 @@ def main():
         else:
             ret, img = cap.read()
             imgs = [img]
+
+        if not ret:
+            print('capture error')
+            continue
 
         for i, img in enumerate(imgs):
             img = cv2.resize(img, (640, 640))

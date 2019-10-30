@@ -4,6 +4,7 @@
 #include <opencv2/imgproc.hpp>
 #include <sstream>
 #include <string>
+#include <thread>
 
 #include "SpinCap/spincamera.hpp"
 #include "SpinCap/spinmanager.hpp"
@@ -14,19 +15,27 @@ using micro = std::chrono::microseconds;
 
 int main(int /*argc*/, char** /*argv*/) {
   SpinManager manager = SpinManager();
+  if (manager.size() == 0) {
+    std::cout << "No camera detected." << std::endl;
+    return 0;
+  }
 
-  //#define STEREO
+#define STEREO
 #ifdef STEREO
   SpinMultiCam cap;
   for (int i = 0; i < manager.size(); i++) {
-    cap.addCamera(manager.getCamera(i));
+    CameraPtr tmp = manager.getCamera(i);
+    cap.addCamera(tmp);
   }
 #else
   SpinCam cap(manager.getCamera(0));
-  cap.setFrameRate(30);
+  //  cap.setFrameRate(30);
   // cap.setFrameRateAuto(true);
+  cap.setSoftwareTrigger();
 #endif
 
+  cap.grab();  // Display setting
+  std::this_thread::sleep_for(std::chrono::milliseconds(500));
   std::cout << "Capture start" << std::endl;
   int fps_cnt = 0;
   double diff_total = 0;

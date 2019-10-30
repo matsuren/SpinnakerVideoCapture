@@ -32,7 +32,7 @@ SpinCam::SpinCam(CameraPtr pCam_) {
     std::cout << "Pixel format:" << pCam->PixelFormat.ToString() << std::endl;
     std::cout << "Device model:" << model << std::endl;
     std::cout << "Serial number:" << serial << std::endl;
-    if (model == "Grasshopper3 GS3-U3-41C6C"){
+    if (model == "Grasshopper3 GS3-U3-41C6C") {
       std::cout << "Set ROI since Model is " << model << std::endl;
       setROI(224, 224, 1600, 1600);
     }
@@ -40,7 +40,6 @@ SpinCam::SpinCam(CameraPtr pCam_) {
     // White balance
     setWhiteBalanceRatio(1.18, "Red");
     setWhiteBalanceRatio(1.46, "Blue");
-
 
   } catch (Spinnaker::Exception& e) {
     std::cout << "Error: " << e.what() << std::endl;
@@ -74,8 +73,14 @@ bool SpinCam::retrieve(cv::Mat& img_) {
     std::cout << "Software trigger is set. Please grab() first." << std::endl;
     return false;
   }
+  ImagePtr pResultImage;
+  try {
+    pResultImage = pCam->GetNextImage(30);
+  } catch (Spinnaker::Exception& e) {
+    std::cout << "Error: " << e.what() << std::endl;
+    return false;
+  }
 
-  ImagePtr pResultImage = pCam->GetNextImage();
   if (pResultImage->IsIncomplete()) {
     return false;
   }
@@ -106,8 +111,8 @@ void SpinCam::setFrameRate(double fps) {
 }
 
 void SpinCam::setROI(int offset_x, int offset_y, int width, int height) {
-  std::cout << "Set ROI:" << offset_x << ", " << offset_y <<  ", " ;
-  std::cout << width << ", " << height <<  std::endl;
+  std::cout << "Set ROI:" << offset_x << ", " << offset_y << ", ";
+  std::cout << width << ", " << height << std::endl;
   if (pCam->OffsetX.GetValue() < offset_x) {
     int _width = width / 32;
     pCam->Width.SetValue(_width * 32);
@@ -130,12 +135,21 @@ void SpinCam::release() {
   pCam->DeInit();
   pCam = nullptr;
 }
+
 void SpinCam::setSoftwareTrigger() {
   std::cout << "Set softwareTrigger" << std::endl;
   pCam->TriggerMode.SetValue(TriggerMode_Off);
   pCam->TriggerSource.SetValue(TriggerSource_Software);
   pCam->TriggerMode.SetValue(TriggerMode_On);
   isSoftwareTrigger = true;
+
+  // Limit exposure time
+  //   pCam->ExposureAuto.SetValue(ExposureAuto_Continuous);
+  //   pCam->AutoExposureExposureTimeUpperLimit.SetValue(20000);
+  // Fix exposure time
+  pCam->ExposureAuto.SetValue(ExposureAuto_Once);
+  //  pCam->ExposureAuto.SetValue(ExposureAuto_Off);
+  //  pCam->ExposureTime.SetValue(10000);
 }
 
 void SpinCam::displaySetting() {

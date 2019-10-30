@@ -27,8 +27,8 @@ public:
   void setSoftwareTrigger();
   void displaySetting();
   void setFrameRateAuto(bool flag);
-  std::string serial; // serial number
-  std::string model; // camera model number
+  std::string serial;  // serial number
+  std::string model;   // camera model number
 
 private:
   void setWhiteBalanceRatio(double val, std::string select = "Red");

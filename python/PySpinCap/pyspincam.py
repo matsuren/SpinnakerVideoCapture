@@ -50,7 +50,12 @@ class PySpinCam(object):
             print('Call grab first')
             return False, np.array([])
 
-        image_result = self.cam.GetNextImage()
+        try:
+            image_result = self.cam.GetNextImage(30)
+        except PySpin.SpinnakerException as ex:
+            print('Error: %s' % ex)
+            return False, np.array([])
+
         if image_result.IsIncomplete():
             return False, np.array([])
 
@@ -82,6 +87,9 @@ class PySpinCam(object):
         self.cam.TriggerSource.SetValue(PySpin.TriggerSource_Software)
         self.cam.TriggerMode.SetValue(PySpin.TriggerMode_On)
         self.isSoftwareTrigger = True
+
+        # Fix exposure time
+        self.cam.ExposureAuto.SetValue(PySpin.ExposureAuto_Once)
 
     def set_white_balance_ratio(self, val, select='Red'):
         if select == 'Red':
