@@ -75,7 +75,11 @@ bool SpinCam::retrieve(cv::Mat& img_) {
   }
   ImagePtr pResultImage;
   try {
-    pResultImage = pCam->GetNextImage(30);
+      if(isSoftwareTrigger){
+          pResultImage = pCam->GetNextImage(30);
+      }else{
+          pResultImage = pCam->GetNextImage(1000);
+      }
   } catch (Spinnaker::Exception& e) {
     std::cout << "Error: " << e.what() << std::endl;
     return false;

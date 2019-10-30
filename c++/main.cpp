@@ -20,7 +20,7 @@ int main(int /*argc*/, char** /*argv*/) {
     return 0;
   }
 
-#define STEREO
+//#define STEREO
 #ifdef STEREO
   SpinMultiCam cap;
   for (int i = 0; i < manager.size(); i++) {
@@ -29,9 +29,9 @@ int main(int /*argc*/, char** /*argv*/) {
   }
 #else
   SpinCam cap(manager.getCamera(0));
-  //  cap.setFrameRate(30);
-  // cap.setFrameRateAuto(true);
-  cap.setSoftwareTrigger();
+  cap.setFrameRate(30);
+//   cap.setFrameRateAuto(true);
+//  cap.setSoftwareTrigger();
 #endif
 
   cap.grab();  // Display setting
