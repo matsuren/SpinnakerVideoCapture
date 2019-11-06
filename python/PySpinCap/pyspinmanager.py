@@ -28,6 +28,8 @@ class PySpinManager(object):
         cam_list.Clear()
 
     def get_camera(self, idx):
+        if idx > 100:
+            idx = str(idx)
         if isinstance(idx, str):
             idx = self.serial2idx[idx]
         elif isinstance(idx, int):
