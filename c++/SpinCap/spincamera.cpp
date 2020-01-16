@@ -69,7 +69,7 @@ void SpinCam::grab() {
 }
 
 bool SpinCam::retrieve(cv::Mat& img_) {
-  if (!isGrab & isSoftwareTrigger) {
+  if (!isGrab && isSoftwareTrigger) {
     std::cout << "Software trigger is set. Please grab() first." << std::endl;
     return false;
   }

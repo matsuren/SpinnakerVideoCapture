@@ -20,7 +20,7 @@ find_package(OpenCV REQUIRED)
 # ##############################################################################
 # Spinnaker SDK
 if(WIN32)
-  set(Spinnaker_LIBS "Spinnakerd_$(PlatformToolset).lib")
+  set(Spinnaker_LIBS debug "Spinnakerd_v140.lib" optimized "Spinnaker_v140.lib")
   set(Spinnaker_INCLUDE_DIR
       "C:/Program Files/Point Grey Research/Spinnaker/include")
   link_directories(
