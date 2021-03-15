@@ -28,9 +28,13 @@ if(WIN32)
 endif(WIN32)
 if(UNIX)
   add_definitions(-DLINUX)
-  set(Spinnaker_LIBS "/opt/spinnaker/lib/libSpinnaker.so")
-  set(Spinnaker_INCLUDE_DIR "/opt/spinnaker/include")
-  link_directories("/usr/lib")
+  find_path(Spinnaker_INCLUDE_DIR Spinnaker.h 
+    PATHS /opt/spinnaker /usr /usr/local
+    PATH_SUFFIXES include)
+  find_library(Spinnaker_LIBS NAMES Spinnaker 
+    PATHS /opt/spinnaker /usr /usr/local
+    PATH_SUFFIXES lib
+  )
 endif(UNIX)
 
 # ##############################################################################
